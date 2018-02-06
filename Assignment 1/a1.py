@@ -64,16 +64,16 @@ print("--- END A ---")
 
 ### B
 print("--- START B ---")
-three_numbers = [-1, -1, -1]
+numbers = [-1, -1, -1]
 
-three_numbers[0], three_numbers[1], three_numbers[2] = \
+numbers[0], numbers[1], numbers[2] = \
     three_unique_random_numbers(original_matrix)
 
-print("the random column numbers are: " + str(three_numbers[0])
-      + ", " + str(three_numbers[1]) + ", " +
-      str(three_numbers[2]))
+print("the random column numbers are: " + str(numbers[0])
+      + ", " + str(numbers[1]) + ", " +
+      str(numbers[2]))
 
-matrix_1 = make_matrix(original_matrix, three_numbers)
+matrix_1 = make_matrix(original_matrix, numbers)
 sort_columns(matrix_1)
 print(matrix_1)
 print("--- END B ---")
@@ -81,15 +81,15 @@ print("--- END B ---")
 
 ### C
 print("--- START C ---")
-numbers = list(three_numbers)
-while compare(numbers, three_numbers):
-    numbers[0], numbers[1], numbers[2] = \
+new_numbers = list(numbers)
+while compare(new_numbers, numbers):
+    new_numbers[0], new_numbers[1], new_numbers[2] = \
         three_unique_random_numbers(original_matrix)
 
-print("second set of random numbers: " + str(numbers[0]) + ", " +
-      str(numbers[1]) + ", " + str(numbers[2]))
+print("second set of random numbers: " + str(new_numbers[0]) + ", " +
+      str(new_numbers[1]) + ", " + str(new_numbers[2]))
 
-matrix_2 = make_matrix(original_matrix, numbers)
+matrix_2 = make_matrix(original_matrix, new_numbers)
 sort_columns(matrix_2, False)
 print(matrix_2)
 print("--- END C ---")
