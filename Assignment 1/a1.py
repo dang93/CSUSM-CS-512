@@ -1,3 +1,11 @@
+"""
+Daniel Guerrero
+Heriberto Bernal
+
+Assignment 1
+"""
+
+
 import numpy as np
 import random as rdm
 
