@@ -7,11 +7,14 @@ class MyMatrix:
         If filename does not have nxn elements, or error
         occurs, print exit message and terminate program.
         """
-        file = open(filename, "r")
-        #for line in file:
-         #   print(line)
-        matrix = np.loadtxt(filename, dtype=int, usecols=(0, n))
-        file.close()
+        num = int(n)
+        list = []
+        i = 0
+        while int(num) > 0:
+            list.append(i)
+            num = num - 1
+            i = i + 1
+        matrix = np.loadtxt(filename, dtype=int, usecols=list)
         print(matrix)
 
 """
