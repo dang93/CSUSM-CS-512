@@ -7,9 +7,31 @@ class MyMatrix:
         If filename does not have nxn elements, or error
         occurs, print exit message and terminate program.
         """
+    """
+        matrix = np.loadtxt(filename, dtype=int)
+        print(matrix)
 
-        num = int(n)
+
+        x = int(n)
+        original_len = len(matrix)
+
+        if x > original_len:
+            print("<<ERROR>> there are less than " + str(x*x) + " entries in"
+                  " the file.")
+            quit()
+
+        while x < original_len:
+            back = len(matrix) - 1
+            print("deleting row: " + str(back))
+            matrix = np.delete(matrix, back, 0)
+            print("deleting column: " + str(back))
+            matrix = np.delete(matrix, back, 1)
+            x = x + 1
+
+        print(matrix)
+    """
         """
+        num = int(n)
         list = []
         i = 0
         while int(num) > 0:
@@ -18,6 +40,8 @@ class MyMatrix:
             i = i + 1
         matrix = np.loadtxt(filename, dtype=int, usecols=list)
         print(matrix)
+        """
+
         """
         fileF = open(filename, "r")
 
@@ -44,11 +68,13 @@ class MyMatrix:
         print(list1[1])
         print(list1[2])
         print(list1[3])
+        """
 
 """
     PART A
 """
 n = input("Enter a positive number n: ")
+
 if int(n) <= 3:
     print("<<ERROR>>\nMust be >3\nexiting program")
     quit()
