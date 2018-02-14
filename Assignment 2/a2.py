@@ -74,8 +74,19 @@ if int(n) <= 3:
     quit()
 print("Entered: " + str(n))
 
-
+"""
+A
+"""
 m = MyMatrix()
 m.get_matrix(n, "file1.txt")
 
+"""
+B
+"""
+m2 = MyMatrix()
+m.get_matrix(n, "file2.txt")
 
+
+"""
+C
+"""
