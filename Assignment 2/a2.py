@@ -7,10 +7,7 @@ class MyMatrix:
         If filename does not have nxn elements, or error
         occurs, print exit message and terminate program.
         """
-    """
         matrix = np.loadtxt(filename, dtype=int)
-        print(matrix)
-
 
         x = int(n)
         original_len = len(matrix)
@@ -22,14 +19,11 @@ class MyMatrix:
 
         while x < original_len:
             back = len(matrix) - 1
-            print("deleting row: " + str(back))
+            x += 1
             matrix = np.delete(matrix, back, 0)
-            print("deleting column: " + str(back))
             matrix = np.delete(matrix, back, 1)
-            x = x + 1
 
         print(matrix)
-    """
         """
         num = int(n)
         list = []
