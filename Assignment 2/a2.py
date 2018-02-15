@@ -2,9 +2,9 @@ import numpy as np
 
 
 class MyMatrix:
-    mymatrix = None
-    #def __init__(self, mymatrix):
-    #    self.mymatrix = mymatrix
+    #mymatrix = None
+    def __init__(self):
+        self.matrix = np.ndarray
 
     def get_matrix(self, n, filename):
         """
@@ -28,26 +28,29 @@ class MyMatrix:
             matrix = np.delete(matrix, back, 0)
             matrix = np.delete(matrix, back, 1)
 
-        self.mymatrix = matrix
-        print(matrix)
+       #self.mymatrix = matrix
+        #print(matrix)
+        return matrix
 
-    def multiplyMatrixWithAnotherMatrix(self, m2):
-        matrix = np.multiply(self.mymatrix, m2.mymatrix)
-        print(matrix)
+    def multiplyMatrixWithAnotherMatrix(self, m1, m2):
+        m = np.multiply(m1, m2)
+        #print(m)
+        return m
 
-    def dotTwoMatrixWithAnotherMatrix(self, m2):
-        matrix = np.dot(self.mymatrix, m2.mymatrix)
-        print(matrix)
+    def dotTwoMatrixWithAnotherMatrix(self, m1, m2):
+        m = np.dot(m1, m2)
+        #print(m)
+        return m
 
-    def transposedMatrix(self):
-        transposedMatrix = np.transpose(self.mymatrix)
-        print(transposedMatrix)
-        return [transposedMatrix]
+    def transposedMatrix(self, m):
+        transposedMatrix = np.transpose(m)
+        #print(transposedMatrix)
+        return transposedMatrix
 
     def divideMatrixByAnotherMatrix(self, m2):
         old_err_state = np.seterr(divide='raise')
         matrix = np.divide(self.mymatrix, m2.mymatrix)
-        print(matrix)
+        #print(matrix)
 
 
         """
@@ -94,7 +97,7 @@ class MyMatrix:
 """
     PART A
 """
-n = input("Enter a positive number n: ")
+n = input("Enter a positive number n: ")    #1
 
 if int(n) <= 3:
     print("<<ERROR>>\nMust be >3\nexiting program")
@@ -104,29 +107,52 @@ print("Entered: " + str(n))
 """
 A
 """
-m = MyMatrix()
-m.get_matrix(n, "file1.txt")
+my_matrix = MyMatrix()                      #2
+m1 = my_matrix.get_matrix(n, "file1.txt")   #3
 
 """
 B
 """
-m2 = MyMatrix()
-m2.get_matrix(n, "file2.txt")
+#m2 = MyMatrix()
+m2 = my_matrix.get_matrix(n, "file2.txt")   #4
 
 """
 C
 """
 #print(m.mymatrix)
 #print(m2.mymatrix)
-m.multiplyMatrixWithAnotherMatrix(m2)
-m.dotTwoMatrixWithAnotherMatrix(m2)
 
-transposedM = MyMatrix()
-transposedM2 = MyMatrix()
-transposedM.mymatrix = m.transposedMatrix()
-transposedM2.mymatrix = m2.transposedMatrix()
+m1_multiply_m2 = my_matrix.multiplyMatrixWithAnotherMatrix(m1, m2)      #5
+m1_dot_multiply_m2 = my_matrix.dotTwoMatrixWithAnotherMatrix(m1, m2)    #6
 
-transposedM.multiplyMatrixWithAnotherMatrix(transposedM2)
-transposedM.dotTwoMatrixWithAnotherMatrix(transposedM2)
+#m.multiplyMatrixWithAnotherMatrix(m2)
+#m.dotTwoMatrixWithAnotherMatrix(m2)
 
-m.divideMatrixByAnotherMatrix(m2)
+m1_trans = my_matrix.transposedMatrix(m1)       #7
+m2_trans = my_matrix.transposedMatrix(m2)       #8
+
+#transposedM = MyMatrix()
+#transposedM2 = MyMatrix()
+#transposedM.mymatrix = m.transposedMatrix()
+#transposedM2.mymatrix = m2.transposedMatrix()
+
+#transposedM.multiplyMatrixWithAnotherMatrix(transposedM2)
+#transposedM.dotTwoMatrixWithAnotherMatrix(transposedM2)
+
+m1T_multiply_m2T = my_matrix.multiplyMatrixWithAnotherMatrix(m1_trans,
+                                                             m2_trans)  #9
+m1T_dotmultiply_m2T = my_matrix.dotTwoMatrixWithAnotherMatrix(m1_trans,
+                                                              m2_trans) #10
+
+
+
+#m.divideMatrixByAnotherMatrix(m2)
+
+print("\nM1\n", m1)
+print("\nM2\n", m2)
+print("\nM1 multiply M2\n", m1_multiply_m2)
+print("\nM1 Dot Multiply M2\n", m1_dot_multiply_m2)
+print("\nM1 Transposed\n", m1_trans)
+print("\nM2 Transposed\n", m2_trans)
+print("\nM1 Transposed Multiply M2 Transposed\n", m1T_multiply_m2T)
+print("\nM1 Transposed Dot Multiply M2 Transposed\n", m1T_dotmultiply_m2T)
