@@ -1,6 +1,11 @@
 import numpy as np
 
+
 class MyMatrix:
+    mymatrix = None
+    #def __init__(self, mymatrix):
+    #    self.mymatrix = mymatrix
+
     def get_matrix(self, n, filename):
         """
         Reads from filename into a nxn matrix.
@@ -13,8 +18,8 @@ class MyMatrix:
         original_len = len(matrix)
 
         if x > original_len:
-            print("<<ERROR>> there are less than " + str(x*x) + " entries in"
-                  " the file.")
+            print("<<ERROR>> there are less than " + str(x * x) + " entries in"
+                                                                  " the file.")
             quit()
 
         while x < original_len:
@@ -23,7 +28,28 @@ class MyMatrix:
             matrix = np.delete(matrix, back, 0)
             matrix = np.delete(matrix, back, 1)
 
+        self.mymatrix = matrix
         print(matrix)
+
+    def multiplyMatrixWithAnotherMatrix(self, m2):
+        matrix = np.multiply(self.mymatrix, m2.mymatrix)
+        print(matrix)
+
+    def dotTwoMatrixWithAnotherMatrix(self, m2):
+        matrix = np.dot(self.mymatrix, m2.mymatrix)
+        print(matrix)
+
+    def transposedMatrix(self):
+        transposedMatrix = np.transpose(self.mymatrix)
+        print(transposedMatrix)
+        return [transposedMatrix]
+
+    def divideMatrixByAnotherMatrix(self, m2):
+        old_err_state = np.seterr(divide='raise')
+        matrix = np.divide(self.mymatrix, m2.mymatrix)
+        print(matrix)
+
+
         """
         num = int(n)
         list = []
@@ -64,6 +90,7 @@ class MyMatrix:
         print(list1[3])
         """
 
+
 """
     PART A
 """
@@ -84,9 +111,22 @@ m.get_matrix(n, "file1.txt")
 B
 """
 m2 = MyMatrix()
-m.get_matrix(n, "file2.txt")
-
+m2.get_matrix(n, "file2.txt")
 
 """
 C
 """
+#print(m.mymatrix)
+#print(m2.mymatrix)
+m.multiplyMatrixWithAnotherMatrix(m2)
+m.dotTwoMatrixWithAnotherMatrix(m2)
+
+transposedM = MyMatrix()
+transposedM2 = MyMatrix()
+transposedM.mymatrix = m.transposedMatrix()
+transposedM2.mymatrix = m2.transposedMatrix()
+
+transposedM.multiplyMatrixWithAnotherMatrix(transposedM2)
+transposedM.dotTwoMatrixWithAnotherMatrix(transposedM2)
+
+m.divideMatrixByAnotherMatrix(m2)
