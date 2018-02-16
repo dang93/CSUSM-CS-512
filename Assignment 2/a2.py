@@ -38,11 +38,10 @@ class MyMatrix:
         return transposedMatrix
 
     def divideMatrixByAnotherMatrix(self, m1, m2):
-
         old_err_state = np.seterr(divide='raise')
         m = np.divide(m1, m2)
-
         return m
+
     def divmat(self, m1, m2):
         m = m1/m2
         return m
@@ -71,8 +70,11 @@ m1T_multiply_m2T = my_matrix.multiplyMatrixWithAnotherMatrix(m1_trans,
                                                              m2_trans)  #9
 m1T_dotmultiply_m2T = my_matrix.dotTwoMatrixWithAnotherMatrix(m1_trans,
                                                               m2_trans) #10
-#m1_divide_m2 = my_matrix.divideMatrixByAnotherMatrix(m1, m2)
 m1m2 = my_matrix.divmat(m1, m2)
+m1m2[np.isinf(m1m2)] = 0
+m1m2 = m1m2.astype(object)
+m1m2[m1m2 == 0] = "undefined"
+
 print("\nM1, " + str(n) + "x" + str(n) + "\n", m1)
 print("\nM2, " + str(n) + "x" + str(n) + "\n", m2)
 print("\nM1 multiply M2\n", m1_multiply_m2)
@@ -81,7 +83,4 @@ print("\nM1 Transposed\n", m1_trans)
 print("\nM2 Transposed\n", m2_trans)
 print("\nM1 Transposed Multiply M2 Transposed\n", m1T_multiply_m2T)
 print("\nM1 Transposed Dot Multiply M2 Transposed\n", m1T_dotmultiply_m2T)
-#print("\nM1 Divided by M2\n", m1_divide_m2)
 print("m1/m2\n", m1m2)
-
-m1m2[np.isnan(m1m2)] = "undefined"
