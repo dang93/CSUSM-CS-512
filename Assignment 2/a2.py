@@ -1,5 +1,11 @@
-import numpy as np
+"""
+Heriberto Bernal
+Daniel Guerrero
 
+CS 512 - Assignment 2 - Working with Square Matrix
+"""
+
+import numpy as np
 
 class MyMatrix:
     def get_matrix(self, n, filename):
@@ -9,57 +15,52 @@ class MyMatrix:
         occurs, print exit message and terminate program.
         """
         matrix = np.loadtxt(filename, dtype=int)
-        x = int(n)
         original_len = len(matrix)
 
-        if x > original_len:
-            print("<<ERROR>> there are less than " + str(x * x) + " entries in"
+        if n > original_len:
+            print("<<ERROR>> there are less than " + str(n * n) + " entries in"
                                                                   " the file.")
             quit()
 
-        while x < original_len:
+        while n < original_len:
             back = len(matrix) - 1
-            x += 1
+            n += 1
             matrix = np.delete(matrix, back, 0)
             matrix = np.delete(matrix, back, 1)
 
         return matrix
 
     def multiplyMatrixWithAnotherMatrix(self, m1, m2):
-        m = np.multiply(m1, m2)
-        return m
+        """ Multiplies two matrices, returning the result as a new matrix."""
+        return np.multiply(m1, m2)
 
     def dotTwoMatrixWithAnotherMatrix(self, m1, m2):
-        m = np.dot(m1, m2)
-        return m
+        """ Performs the dot product of two matrices, returns a new matrix."""
+        return np.dot(m1, m2)
 
     def transposedMatrix(self, m):
-        transposedMatrix = np.transpose(m)
-        return transposedMatrix
+        """ Transposes a matrix, returning a new matrix."""
+        return np.transpose(m)
 
-    def divideMatrixByAnotherMatrix(self, m1, m2):
-        old_err_state = np.seterr(divide='raise')
-        m = np.divide(m1, m2)
-        return m
-
-    def divmat(self, m1, m2):
-        m = m1/m2
-        return m
+    def divideTwoMatrices(self, m1, m2):
+        """ Divides two matrices, returning a new matrix."""
+        np.seterr(divide='ignore')
+        return m1/m2
 
 
 #A
-n = input("Enter a positive number n: ")    #1
+n = int(input("Enter a positive number n: "))   #1
 
-if int(n) <= 3:
+if n <= 3:
     print("<<ERROR>>\nMust be >3\nexiting program")
     quit()
 print("Entered: " + str(n))
 
-my_matrix = MyMatrix()                      #2
-m1 = my_matrix.get_matrix(n, "file1.txt")   #3
+my_matrix = MyMatrix()                          #2
+m1 = my_matrix.get_matrix(n, "file1.txt")       #3
 
 #B
-m2 = my_matrix.get_matrix(n, "file2.txt")   #4
+m2 = my_matrix.get_matrix(n, "file2.txt")       #4
 
 #C
 m1_multiply_m2 = my_matrix.multiplyMatrixWithAnotherMatrix(m1, m2)      #5
@@ -70,10 +71,12 @@ m1T_multiply_m2T = my_matrix.multiplyMatrixWithAnotherMatrix(m1_trans,
                                                              m2_trans)  #9
 m1T_dotmultiply_m2T = my_matrix.dotTwoMatrixWithAnotherMatrix(m1_trans,
                                                               m2_trans) #10
-m1m2 = my_matrix.divmat(m1, m2)
-m1m2[np.isinf(m1m2)] = 0
-m1m2 = m1m2.astype(object)
-m1m2[m1m2 == 0] = "undefined"
+# Divide two matrices, replacing all divide by 0 errors
+# with 'undefined' string
+m1_divided_by_m2 = my_matrix.divideTwoMatrices(m1, m2)
+m1_divided_by_m2[np.isinf(m1_divided_by_m2)] = 0
+m1_divided_by_m2 = m1_divided_by_m2.astype(object)
+m1_divided_by_m2[m1_divided_by_m2 == 0] = "undefined"
 
 print("\nM1, " + str(n) + "x" + str(n) + "\n", m1)
 print("\nM2, " + str(n) + "x" + str(n) + "\n", m2)
@@ -83,4 +86,4 @@ print("\nM1 Transposed\n", m1_trans)
 print("\nM2 Transposed\n", m2_trans)
 print("\nM1 Transposed Multiply M2 Transposed\n", m1T_multiply_m2T)
 print("\nM1 Transposed Dot Multiply M2 Transposed\n", m1T_dotmultiply_m2T)
-print("m1/m2\n", m1m2)
+print("\nM1 Divided by M2\n", m1_divided_by_m2)
