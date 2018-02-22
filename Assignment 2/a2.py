@@ -47,7 +47,7 @@ class MyMatrix:
         np.seterr(divide='ignore')
         return m1/m2
 
-
+#****************Main Program*************************************
 #A
 n = int(input("Enter a positive number n: "))   #1
 
