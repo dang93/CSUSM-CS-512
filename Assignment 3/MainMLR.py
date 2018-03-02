@@ -36,7 +36,7 @@ def Create_A_Population(numOfPop, numOfFea):
     for i in range(numOfPop):
         V = getAValidrow(numOfFea)
         for j in range(numOfFea):
-            population[i][j] = V[j]              
+            population[i][j] = V[j]
     return population
 
 #------------------------------------------------------------------------------
@@ -60,14 +60,14 @@ def createAnOutputFile():
     fileOut = file(file_name, 'wb')
     fileW = csv.writer(fileOut)
 
-    fileW.writerow(['Descriptor ID', 'Fitness', 'Model','R2', 'Q2', \
+    fileW.writerow(['Descriptor ID', 'Fitness', 'Model','R2', 'Q2',
             'R2Pred_Validation', 'R2Pred_Test'])
 
     return fileW
 
 
 #-------------------------------------------------------------------------------------------
-def createANewPopulation(numOdPop, numOfFea, OldPopulation, fitness):
+def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness):
 
 #   NewPopulation = create a 2D array of (numOfPop by num of features)
 #   sort the OldPopulation and their fitness value based on the asending
@@ -82,6 +82,7 @@ def createANewPopulation(numOdPop, numOfFea, OldPopulation, fitness):
 #   The rest of the rows should be filled randomly the same way you did when
 #   you created the initial population.
 
+<<<<<<< Updated upstream
     #OldPopulation.sort(key=lambda x: x[0])
     #NewPopulation = Create_A_Population(numOdPop, numOfFea)
     #NewPopulation.insert(0, OldPopulation[0][0])
@@ -99,6 +100,27 @@ def PerformOneMillionIteration(numOdPop, numOfFea, population, fitness, model, f
 #                                TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
 #      NumOfGenerations = NumOfGenerations + 1
      return
+=======
+    NewPopulation = ndarray(shape=(numOfPop, numOfFea))
+    #print fitness.shape()
+    print shape(fitness)
+    print shape(OldPopulation)
+    print OldPopulation[2]
+
+    return NewPopulation; 
+
+#-------------------------------------------------------------------------------------------
+def PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model, fileW, \
+                               TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
+   NumOfGenerations = 1
+   OldPopulation = population
+   while (NumOfGenerations < 15):#1,000,000):
+        population = createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness)
+        fittingStatus, fitness = FromFinessFileMLR.validate_model(model,fileW, population, \
+                                TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
+        NumOfGenerations = NumOfGenerations + 1
+
+>>>>>>> Stashed changes
 #--------------------------------------------------------------------------------------------
 def main():
 
@@ -135,7 +157,12 @@ def main():
     population = Create_A_Population(numOfPop,numOfFea)
     fittingStatus, fitness = FromFinessFileMLR.validate_model(model,fileW, population, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
 
+<<<<<<< Updated upstream
     PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
+=======
+    PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model, fileW, \
+                               TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
+>>>>>>> Stashed changes
 #main routine ends in here
 
 #------------------------------------------------------------------------------
