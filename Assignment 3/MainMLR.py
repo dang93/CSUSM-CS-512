@@ -1,6 +1,6 @@
 
 import time                 #provides timing for benchmarks
-from numpy  import *        #provides complex math and array functions
+from numpy import *        #provides complex math and array functions
 from sklearn import svm     #provides Support Vector Regression
 import csv
 import math
@@ -10,20 +10,24 @@ import sys
 import mlr
 import FromDataFileMLR
 import FromFinessFileMLR
-				
+
+class GeneticAlgorithm:
+
+
+
 #------------------------------------------------------------------------------
-def getAValidrow(numOfFea, eps=0.015):
-    sum = 0
-    while (sum < 3):
-       V = zeros(numOfFea)
-       for j in range(numOfFea):
-          r = random.uniform(0,1)
-          if (r < eps):
-             V[j] = 1
-          else:
-             V[j] = 0
-       sum = V.sum()
-    return V
+    def getAValidrow(numOfFea, eps=0.015):
+        sum = 0
+        while (sum < 3):
+           V = zeros(numOfFea)
+           for j in range(numOfFea):
+              r = random.uniform(0,1)
+              if (r < eps):
+                 V[j] = 1
+              else:
+                 V[j] = 0
+           sum = V.sum()
+        return V
 
 #------------------------------------------------------------------------------
 
@@ -77,11 +81,16 @@ def createANewPopulation(numOdPop, numOfFea, OldPopulation, fitness):
 #   new population.
 #   The rest of the rows should be filled randomly the same way you did when
 #   you created the initial population.
-    return NewPopulation; 
+
+    #OldPopulation.sort(key=lambda x: x[0])
+    #NewPopulation = Create_A_Population(numOdPop, numOfFea)
+    #NewPopulation.insert(0, OldPopulation[0][0])
+    #NewPopulation.insert(1, OldPopulation[1][0])
+
+    return NewPopulation;
 
 #-------------------------------------------------------------------------------------------
-def PerformOneMillionIteration(numOdPop, numOfFea, population, fitness, model, fileW, \
-                               TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
+def PerformOneMillionIteration(numOdPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
 #   NumOfGenerations = 1
 #   OldPopulation = population
 #   while (NumOfGenerations < 1,000,000)
@@ -124,11 +133,9 @@ def main():
 
     fittingStatus = unfit
     population = Create_A_Population(numOfPop,numOfFea)
-    fittingStatus, fitness = FromFinessFileMLR.validate_model(model,fileW, population, \
-        TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
+    fittingStatus, fitness = FromFinessFileMLR.validate_model(model,fileW, population, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
 
-    PerformOneMillionIteration(numOdPop, numOfFea, population, fitness, model, fileW, \
-                               TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
+    PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
 #main routine ends in here
 
 #------------------------------------------------------------------------------

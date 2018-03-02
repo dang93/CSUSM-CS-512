@@ -1,6 +1,6 @@
 import time                  # provides timing for benchmarks
 from numpy   import *        # provides complex math and array functions
-#from sklearn import svm     # provides Support Vector Regression
+from sklearn import svm     # provides Support Vector Regression
 import csv
 import math
 import sys

@@ -14,19 +14,34 @@ class MyMatrix:
         If filename does not have nxn elements, or error
         occurs, print exit message and terminate program.
         """
-        matrix = np.loadtxt(filename, dtype=int)
-        original_len = len(matrix)
+        #matrix = np.loadtxt(filename, dtype=int)
+        #original_len = len(matrix)
 
-        if n > original_len:
-            print("<<ERROR>> there are less than " + str(n * n) + " entries in"
-                                                                  " the file.")
-            quit()
+        #if n > original_len:
+         #   print("<<ERROR>> there are less than " + str(n * n) + " entries in"
+          #                                                        " the file.")
+           # quit()
 
-        while n < original_len:
-            back = len(matrix) - 1
-            n += 1
-            matrix = np.delete(matrix, back, 0)
-            matrix = np.delete(matrix, back, 1)
+        matrix = [[0 for x in range(n)] for y in range(n)]
+
+        file = open(filename, "r")
+        counterX = 0
+        counterY = 0
+
+        for line in file:
+            for x in line.split():
+                if counterX < n and counterY < n:
+                    matrix[counterY][counterX] = int(x);
+                counterX += 1
+            counterX = 0
+            counterY += 1
+
+        matrix = np.array(matrix)
+        #while n < original_len:
+        #    back = len(matrix) - 1
+        #    n += 1
+        #    matrix = np.delete(matrix, back, 0)
+        #    matrix = np.delete(matrix, back, 1)
 
         return matrix
 
