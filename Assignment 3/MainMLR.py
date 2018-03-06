@@ -47,7 +47,7 @@ def Create_A_Population(numOfPop, numOfFea):
 # linear regression of "SVM" support vector machine) the R^2 of training, Q^2
 # of training,R^2 of validation, and R^2 of test is placed in the output file
 
-def createAnOutputFile():
+def createAnOutputFile(alg=None):
 
     file_name = None
     algorithm = None
@@ -141,8 +141,10 @@ def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness):
     """
 
 
-
-
+    for i in range(7, numOfPop):
+        V = getAValidrow(numOfFea)
+        for j in range(numOfFea):
+            NewPopulation[i][j] = V[j]
 
     #NewPopu = array(NewPopulation)
     #print(type(NewPopulation))
