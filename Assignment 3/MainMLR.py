@@ -68,7 +68,7 @@ def createAnOutputFile(alg=None):
     return fileW
 
 
-#-------------------------------------------------------------------------------------------
+#------------------------------------------------------------------
 def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness):
 
 #   NewPopulation = create a 2D array of (numOfPop by num of features)
@@ -84,37 +84,19 @@ def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness):
 #   The rest of the rows should be filled randomly the same way you did when
 #   you created the initial population.
 
-    #OldPopulation.sort(key=lambda x: x[0])
-    #NewPopulation = Create_A_Population(numOdPop, numOfFea)
-    #NewPopulation.insert(0, OldPopulation[0][0])
-    #NewPopulation.insert(1, OldPopulation[1][0])
-
     #sort fitness and old population
-    #fitness = numpy.array(fitness)
-    #OldPopulation = numpy.array(OldPopulation)
-
-    #print(fitness)
     inds = fitness.argsort()
-
     sortedFitness = fitness.sort()
-    #print("SORTED?", fitness) --YES
-    #print(sortedFitness)
     sortedOldPopu = OldPopulation[inds]
 
     mom = sortedOldPopu[0]
     dad = sortedOldPopu[1]
 
-    #NewPopulation = [[0 for x in range(numOfPop)] for y in range(numOfFea)]
     NewPopulation = ndarray(shape=(numOfPop, numOfFea))
-    #NewPopulation.insert(0, sortedOldPopu[0,])
     NewPopulation[0] = mom
-    #NewPopulation.insert(1, sortedOldPopu[1,])
     NewPopulation[1] = dad
-    #print(NewPopulation[0]) #print first row of newpopulation
 
-    """
-    one point crossover, 4 children
-    """
+    #one point crossover, 4 children
     for i in range(4):
         random.seed()
         point = random.randint(0, (shape(mom)[0] - 1))
@@ -122,9 +104,8 @@ def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness):
         dad_part =  dad[point:]
         child = concatenate((mom_part, dad_part))
 
-        """
-        mutate each child
-        """
+
+        #mutate each child
         for x in range(child.shape[0]):
             num = random.randint(0, 10000)
             if num < 5:     #.05% chance
@@ -132,54 +113,36 @@ def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness):
                     child[x] = 1
                 else:
                     child[x] = 0
-
         NewPopulation[i + 2] = child
 
-    """
-    first 6 rows are mom, dad, and children
-    starting from row 7 to the end, fill with random data
-    """
-
-
+    #rest random data
     for i in range(7, numOfPop):
         V = getAValidrow(numOfFea)
         for j in range(numOfFea):
             NewPopulation[i][j] = V[j]
 
-    #NewPopu = array(NewPopulation)
-    #print(type(NewPopulation))
-    #print(shape(NewPopulation))
     return NewPopulation
 
-#-------------------------------------------------------------------------------------------
-#def PerformOneMillionIteration(numOdPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
-#   NumOfGenerations = 1
-#   OldPopulation = population
-#   while (NumOfGenerations < 1,000,000)
-#       population = createANewPopulation(numOdPop, numOfFea, OldPopulation, fitness)
-#       fittingStatus, fitness = FromFinessFileMLR.validate_model(model,fileW, population, \
-#                                TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
-#      NumOfGenerations = NumOfGenerations + 1
-     #return
-
-    #NewPopulation = ndarray(shape=(numOfPop, numOfFea))
-    #print fitness.shape()
-    #print shape(fitness)
-    #print shape(OldPopulation)
-    #print OldPopulation[2]
-
-    #return NewPopulation;
-
-#-------------------------------------------------------------------------------------------
-def PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
+#---------------------------------------------------------------------------
+def PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model,
+                               fileW, TrainX, TrainY, ValidateX, ValidateY,
+                               TestX, TestY):
    NumOfGenerations = 1
    OldPopulation = population
    while (NumOfGenerations < 15):#1,000,000):
-        population = createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness)
-        fittingStatus, fitness = FromFinessFileMLR.validate_model(model, fileW, population, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
+        population = createANewPopulation(numOfPop, numOfFea, OldPopulation,
+                                          fitness)
+        fittingStatus, fitness = FromFinessFileMLR.validate_model(model, fileW,
+                                                                  population,
+                                                                  TrainX,
+                                                                  TrainY,
+                                                                  ValidateX,
+                                                                  ValidateY,
+                                                                  TestX, TestY)
         NumOfGenerations = NumOfGenerations + 1
 
-#--------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------
 def main():
 
     # create an output file. Name the object to be FileW 
@@ -190,7 +153,8 @@ def main():
     # The class is located in mlr file
     model = mlr.MLR()
 
-    #Number of descriptor should be 385 and number of population should be 50 or more
+    #Number of descriptor should be 385 and number of population should
+    # be 50 or more
     numOfPop = 50 
     numOfFea = 385
 
@@ -198,24 +162,30 @@ def main():
     # enhancement is done, we can quit
     unfit = 1000
 
-    # Final model requirements: The following is used to evaluate each model. The minimum
-    # values for R^2 of training should be 0.6, R^2 of Validation should be 0.5 and R^2 of
-    # test should be 0.5
+    # Final model requirements: The following is used to evaluate each model.
+    # The minimum values for R^2 of training should be 0.6, R^2 of Validation
+    # should be 0.5 and R^2 of test should be 0.5
     R2req_train    = .6 
     R2req_validate = .5
     R2req_test     = .5
 
     # getAllOfTheData is in FromDataFileMLR file. The following places the data
     # (training data, validation data, and test data) into associated matrices
-    TrainX, TrainY, ValidateX, ValidateY, TestX, TestY = FromDataFileMLR.getAllOfTheData()
-    TrainX, ValidateX, TestX = FromDataFileMLR.rescaleTheData(TrainX, ValidateX, TestX)
+    TrainX, TrainY, ValidateX, ValidateY, TestX, TestY = \
+        FromDataFileMLR.getAllOfTheData()
+    TrainX, ValidateX, TestX = \
+        FromDataFileMLR.rescaleTheData(TrainX, ValidateX, TestX)
 
     fittingStatus = unfit
     population = Create_A_Population(numOfPop,numOfFea)
-    fittingStatus, fitness = FromFinessFileMLR.validate_model(model,fileW, population, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
+    fittingStatus, fitness = \
+        FromFinessFileMLR.validate_model(model,fileW, population, TrainX,
+                                         TrainY, ValidateX, ValidateY, TestX,
+                                         TestY)
 
-    #PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
-    PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
+    PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model,
+                               fileW, TrainX, TrainY, ValidateX, ValidateY,
+                               TestX, TestY)
 
 
 #main routine ends in here
