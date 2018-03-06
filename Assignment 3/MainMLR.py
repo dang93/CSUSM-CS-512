@@ -1,10 +1,11 @@
 import time                 #provides timing for benchmarks
 from numpy import *        #provides complex math and array functions
-from partd import numpy
+#from partd import numpy
 from sklearn import svm     #provides Support Vector Regression
 import csv
 import math
 import sys
+#import random
 
 #Local files created by me
 import mlr
@@ -46,7 +47,7 @@ def Create_A_Population(numOfPop, numOfFea):
 # linear regression of "SVM" support vector machine) the R^2 of training, Q^2
 # of training,R^2 of validation, and R^2 of test is placed in the output file
 
-def createAnOutputFile(alg=None):
+def createAnOutputFile():
 
     file_name = None
     algorithm = None
@@ -91,20 +92,65 @@ def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness):
     #sort fitness and old population
     #fitness = numpy.array(fitness)
     #OldPopulation = numpy.array(OldPopulation)
+
+    #print(fitness)
     inds = fitness.argsort()
+
     sortedFitness = fitness.sort()
+    #print("SORTED?", fitness) --YES
+    #print(sortedFitness)
     sortedOldPopu = OldPopulation[inds]
 
-    NewPopulation = [[0 for x in range(numOfPop)] for y in range(numOfFea)]
-    NewPopulation.insert(0, sortedOldPopu[0,])
-    NewPopulation.insert(1, sortedOldPopu[1,])
-    print(NewPopulation[0]) #print first row of newpopulation
+    mom = sortedOldPopu[0]
+    dad = sortedOldPopu[1]
+
+    #NewPopulation = [[0 for x in range(numOfPop)] for y in range(numOfFea)]
+    NewPopulation = ndarray(shape=(numOfPop, numOfFea))
+    #NewPopulation.insert(0, sortedOldPopu[0,])
+    NewPopulation[0] = mom
+    #NewPopulation.insert(1, sortedOldPopu[1,])
+    NewPopulation[1] = dad
+    #print(NewPopulation[0]) #print first row of newpopulation
+
+    """
+    one point crossover, 4 children
+    """
+    for i in range(4):
+        random.seed()
+        point = random.randint(0, (shape(mom)[0] - 1))
+        mom_part = mom[:point]
+        dad_part =  dad[point:]
+        child = concatenate((mom_part, dad_part))
+
+        """
+        mutate each child
+        """
+        for x in range(child.shape[0]):
+            num = random.randint(0, 10000)
+            if num < 5:     #.05% chance
+                if child[x] == 0:
+                    child[x] = 1
+                else:
+                    child[x] = 0
+
+        NewPopulation[i + 2] = child
+
+    """
+    first 6 rows are mom, dad, and children
+    starting from row 7 to the end, fill with random data
+    """
 
 
-    #return NewPopulation;
+
+
+
+    #NewPopu = array(NewPopulation)
+    #print(type(NewPopulation))
+    #print(shape(NewPopulation))
+    return NewPopulation
 
 #-------------------------------------------------------------------------------------------
-def PerformOneMillionIteration(numOdPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
+#def PerformOneMillionIteration(numOdPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
 #   NumOfGenerations = 1
 #   OldPopulation = population
 #   while (NumOfGenerations < 1,000,000)
@@ -112,7 +158,7 @@ def PerformOneMillionIteration(numOdPop, numOfFea, population, fitness, model, f
 #       fittingStatus, fitness = FromFinessFileMLR.validate_model(model,fileW, population, \
 #                                TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
 #      NumOfGenerations = NumOfGenerations + 1
-     return
+     #return
 
     #NewPopulation = ndarray(shape=(numOfPop, numOfFea))
     #print fitness.shape()
@@ -123,13 +169,13 @@ def PerformOneMillionIteration(numOdPop, numOfFea, population, fitness, model, f
     #return NewPopulation;
 
 #-------------------------------------------------------------------------------------------
-#def PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
-#   NumOfGenerations = 1
-#   OldPopulation = population
-#   while (NumOfGenerations < 15):#1,000,000):
-#        population = createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness)
-#        fittingStatus, fitness = FromFinessFileMLR.validate_model(model,fileW, population, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
-#        NumOfGenerations = NumOfGenerations + 1
+def PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
+   NumOfGenerations = 1
+   OldPopulation = population
+   while (NumOfGenerations < 15):#1,000,000):
+        population = createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness)
+        fittingStatus, fitness = FromFinessFileMLR.validate_model(model, fileW, population, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
+        NumOfGenerations = NumOfGenerations + 1
 
 #--------------------------------------------------------------------------------------------
 def main():

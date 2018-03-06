@@ -97,7 +97,6 @@ def OnlySelectTheOnesColumns(popI):
 #------------------------------------------------------------------------------
 
 def validate_model(model, fileW, population, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
-    
     numOfPop = population.shape[0]
     fitness = zeros(numOfPop)
     c = 2
