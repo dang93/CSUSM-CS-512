@@ -178,7 +178,6 @@ def PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model, f
         population = createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness)
         fittingStatus, fitness = FromFinessFileMLR.validate_model(model, fileW, population, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
         NumOfGenerations = NumOfGenerations + 1
-
 #--------------------------------------------------------------------------------------------
 def main():
 
