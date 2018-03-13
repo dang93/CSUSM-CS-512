@@ -100,16 +100,28 @@ def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness):
 
     CurrentPopulation[0] = sortedOldPopu[0]
 
-    randomNum1 = randint(1, 50)
-    randomNum2 = randint(1, 50)
-    randomNum3 = randint(1, 50)
-
     VRow = ndarray(shape=(1, numOfFea))
     F = 0.5
+    counter = 1
 
-    for i in range(numOfPop):
+    while(counter < numOfPop):
+        randomNum1 = randint(1, 50)
+        randomNum2 = randint(1, 50)
+        randomNum3 = randint(1, 50)
+
         for j in range(numOfFea):
-            VRow[i][j] = math.floor(sortedOldPopu[randomNum3][j]+(F*(sortedOldPopu[randomNum1][j] - sortedOldPopu[randomNum2][j])))
+            VRow[0][j] = math.floor(sortedOldPopu[randomNum3][j]+(F*(sortedOldPopu[randomNum1][j] - sortedOldPopu[randomNum2][j])))
+
+        if():#rand(0,1)< CV
+            CurrentPopulation[counter] = VRow
+        else:
+            for i in range(numOfFea):
+                VRow[0][j] = sortedOldPopu[counter][i]
+            CurrentPopulation[counter] = VRow
+
+        counter += 1
+
+
 
     #mom = sortedOldPopu[0]
     #dad = sortedOldPopu[1]
