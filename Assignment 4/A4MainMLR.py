@@ -1,6 +1,7 @@
 import time                 #provides timing for benchmarks
 from random import randint
 
+from mpmath import rand
 from numpy import *        #provides complex math and array functions
 #from partd import numpy
 from sklearn import svm     #provides Support Vector Regression
@@ -84,11 +85,11 @@ def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness):
     #fitness = numpy.array(fitness)
     #OldPopulation = numpy.array(OldPopulation)
 
-    CurrentPopulation = OldPopulation;
+    NewPopulation = OldPopulation;
 
     for i in range(numOfPop):
         for j in range(numOfFea):
-            CurrentPopulation[i][j] = 0
+            NewPopulation[i][j] = 0
 
     #print(fitness)
     inds = fitness.argsort()
@@ -98,27 +99,30 @@ def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness):
     #print(sortedFitness)
     sortedOldPopu = OldPopulation[inds]
 
-    CurrentPopulation[0] = sortedOldPopu[0]
+    NewPopulation[0] = sortedOldPopu[0]
 
     VRow = ndarray(shape=(1, numOfFea))
     F = 0.5
     counter = 1
+    CV = 0.7
 
     while(counter < numOfPop):
         randomNum1 = randint(1, 50)
         randomNum2 = randint(1, 50)
         randomNum3 = randint(1, 50)
 
+        #if negative number, make it zero
         for j in range(numOfFea):
-            VRow[0][j] = math.floor(sortedOldPopu[randomNum3][j]+(F*(sortedOldPopu[randomNum1][j] - sortedOldPopu[randomNum2][j])))
+            newBit = math.floor(sortedOldPopu[randomNum3][j]+(F*(sortedOldPopu[randomNum1][j] - sortedOldPopu[randomNum2][j])))
+            if(newBit < 0):
+                newBit = 0
+            VRow[0][j] = newBit
 
-        if():#rand(0,1)< CV
-            CurrentPopulation[counter] = VRow
-        else:
-            for i in range(numOfFea):
-                VRow[0][j] = sortedOldPopu[counter][i]
-            CurrentPopulation[counter] = VRow
+        for i in range(numOfFea):
+            if(rand(0, 1) > CV):
+                VRow[0][i] = sortedOldPopu[counter][i]
 
+        NewPopulation[counter] = VRow
         counter += 1
 
 
@@ -143,7 +147,7 @@ def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness):
     #NewPopu = array(NewPopulation)
     #print(type(NewPopulation))
     #print(shape(NewPopulation))
-    return CurrentPopulation
+    return NewPopulation
 
 #-------------------------------------------------------------------------------------------
 #def PerformOneMillionIteration(numOdPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
