@@ -8,7 +8,7 @@ from sklearn import svm     #provides Support Vector Regression
 import csv
 import math
 import sys
-#import random
+import random as r
 
 #Local files created by me
 import mlr
@@ -80,99 +80,71 @@ def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness):
 #   So, Move two rows with of the OldPopulation with the lowest fitness
 #   to row 1 and row 2 of the new population.
 
-
-    #sort fitness and old population
-    #fitness = numpy.array(fitness)
-    #OldPopulation = numpy.array(OldPopulation)
-
-    NewPopulation = OldPopulation;
+    NewPopulation = OldPopulation
 
     for i in range(numOfPop):
         for j in range(numOfFea):
             NewPopulation[i][j] = 0
 
-    #print(fitness)
     inds = fitness.argsort()
-
     sortedFitness = fitness.sort()
-    #print("SORTED?", fitness) --YES
-    #print(sortedFitness)
     sortedOldPopu = OldPopulation[inds]
-
     NewPopulation[0] = sortedOldPopu[0]
-
     VRow = ndarray(shape=(1, numOfFea))
     F = 0.5
     counter = 1
     CV = 0.7
 
+    #make a list of 50 unique sets of 3 numbers within range 0,50
+    master_set = set()
+    set_len = 0
+
+    while(len(master_set) < 50):
+        numbers = r.sample(xrange(1,50), 3)
+        numbers_str = str(numbers[0]) + "," + str(numbers[1]) + ',' \
+                      + str(numbers[2])
+        master_set.add(numbers_str)
+        set_len += 1
+
+    #set m is a set of 3 comma separated integers represented as a string.
+    #turn them into list of 50 lists of 3 integers
+    temp_list = list(master_set)
+    master_list = []
+
+    for j in range(len(temp_list)):
+        num = []
+        for i in temp_list[j].split(','):
+            num.append(int(i))
+        master_list.append(num)
+
     while(counter < numOfPop):
-        randomNum1 = randint(1, 50)
-        randomNum2 = randint(1, 50)
-        randomNum3 = randint(1, 50)
+        randomNum1 = master_list[counter][0]
+        randomNum2 = master_list[counter][1]
+        randomNum3 = master_list[counter][2]
 
         #if negative number, make it zero
         for j in range(numOfFea):
-            newBit = math.floor(sortedOldPopu[randomNum3][j]+(F*(sortedOldPopu[randomNum1][j] - sortedOldPopu[randomNum2][j])))
+            newBit = math.floor(sortedOldPopu[randomNum3][j]+
+                                (F*(sortedOldPopu[randomNum1][j] -
+                                    sortedOldPopu[randomNum2][j])))
             if(newBit < 0):
                 newBit = 0
             VRow[0][j] = newBit
 
         for i in range(numOfFea):
-            if(rand(0, 1) > CV):
+            if(r.uniform(0, 1) > CV):
                 VRow[0][i] = sortedOldPopu[counter][i]
 
         NewPopulation[counter] = VRow
         counter += 1
 
-
-
-    #mom = sortedOldPopu[0]
-    #dad = sortedOldPopu[1]
-
-    #NewPopulation = [[0 for x in range(numOfPop)] for y in range(numOfFea)]
-    #NewPopulation = ndarray(shape=(numOfPop, numOfFea))
-    #NewPopulation.insert(0, sortedOldPopu[0,])
-    #NewPopulation[0] = mom
-    #NewPopulation.insert(1, sortedOldPopu[1,])
-    #NewPopulation[1] = dad
-    #print(NewPopulation[0]) #print first row of newpopulation
-
-
-    #for i in range(7, numOfPop):
-    #    V = getAValidrow(numOfFea)
-    #    for j in range(numOfFea):
-    #        NewPopulation[i][j] = V[j]
-
-    #NewPopu = array(NewPopulation)
-    #print(type(NewPopulation))
-    #print(shape(NewPopulation))
     return NewPopulation
 
-#-------------------------------------------------------------------------------------------
-#def PerformOneMillionIteration(numOdPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
-#   NumOfGenerations = 1
-#   OldPopulation = population
-#   while (NumOfGenerations < 1,000,000)
-#       population = createANewPopulation(numOdPop, numOfFea, OldPopulation, fitness)
-#       fittingStatus, fitness = FromFinessFileMLR.validate_model(model,fileW, population, \
-#                                TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
-#      NumOfGenerations = NumOfGenerations + 1
-     #return
-
-    #NewPopulation = ndarray(shape=(numOfPop, numOfFea))
-    #print fitness.shape()
-    #print shape(fitness)
-    #print shape(OldPopulation)
-    #print OldPopulation[2]
-
-    #return NewPopulation;
-
-#-------------------------------------------------------------------------------------------
 def PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model, fileW, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
    NumOfGenerations = 1
    OldPopulation = population
    while (NumOfGenerations < 15):#1,000,000):
+        print(NumOfGenerations)
         population = createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness)
         fittingStatus, fitness = FromFinessFileMLR.validate_model(model, fileW, population, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY)
         NumOfGenerations = NumOfGenerations + 1

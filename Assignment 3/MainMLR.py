@@ -12,11 +12,6 @@ import mlr
 import FromDataFileMLR
 import FromFinessFileMLR
 
-
-#class GeneticAlgorithm:
-
-
-
 #------------------------------------------------------------------------------
 def getAValidrow(numOfFea, eps=0.015):
     sum = 0
@@ -129,7 +124,8 @@ def PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model,
                                TestX, TestY):
    NumOfGenerations = 1
    OldPopulation = population
-   while (NumOfGenerations < 15):#1,000,000):
+   while (NumOfGenerations < 1000):
+        print NumOfGenerations
         population = createANewPopulation(numOfPop, numOfFea, OldPopulation,
                                           fitness)
         fittingStatus, fitness = FromFinessFileMLR.validate_model(model, fileW,

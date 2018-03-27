@@ -45,7 +45,8 @@ def cv_predict(model, set_x, set_y):
 def calc_fitness(xi, Y, Yhat, c=2):
     """
     Calculate fitness of a prediction.
-    xi : array_like -- Mask of features to measure fitness of. Must be of dtype bool.
+    xi : array_like -- Mask of features to measure fitness of. Must be of dtype
+            bool.
     c : float       -- Adjustment parameter.
     """
     
@@ -82,7 +83,8 @@ def initializeYDimension():
     yHatValidation = {}
     yTest = {}
     yHatTest = {}
-    return yTrain, yHatTrain, yHatCV, yValidation, yHatValidation, yTest, yHatTest 
+    return yTrain, yHatTrain, yHatCV, yValidation, yHatValidation, yTest, \
+           yHatTest
 #------------------------------------------------------------------------------
 def OnlySelectTheOnesColumns(popI):
     numOfFea = popI.shape[0]
@@ -96,7 +98,8 @@ def OnlySelectTheOnesColumns(popI):
  
 #------------------------------------------------------------------------------
 
-def validate_model(model, fileW, population, TrainX, TrainY, ValidateX, ValidateY, TestX, TestY):
+def validate_model(model, fileW, population, TrainX, TrainY, ValidateX,
+                   ValidateY, TestX, TestY):
     numOfPop = population.shape[0]
     fitness = zeros(numOfPop)
     c = 2
@@ -128,7 +131,7 @@ def validate_model(model, fileW, population, TrainX, TrainY, ValidateX, Validate
             return unfit, fitness
         
         # Computed predicted values
-        Yhat_cv = cv_predict(model, X_train_masked, TrainY)    # Cross Validation
+        Yhat_cv = cv_predict(model, X_train_masked, TrainY)  # Cross Validation
         Yhat_validation = model.predict(X_validation_masked)
         Yhat_test = model.predict(X_test_masked)
             
@@ -147,7 +150,8 @@ def validate_model(model, fileW, population, TrainX, TrainY, ValidateX, Validate
             
         fitness[i] = calc_fitness(xi, Y_fitness, Yhat_fitness, c)
 
-        if predictive and ((q2_loo < 0.5) or (r2pred_validation < 0.5) or (r2pred_test < 0.5)):
+        if predictive and ((q2_loo < 0.5) or (r2pred_validation < 0.5) or
+                           (r2pred_test < 0.5)):
             # if it's not worth recording, just return the fitness
             print ("ending the program because of predictive is: ", predictive)
             continue
@@ -167,14 +171,16 @@ def validate_model(model, fileW, population, TrainX, TrainY, ValidateX, Validate
         
         trackR2[idx] = FromDataFileMLR.getTwoDecPoint(r2_train)
         trackQ2[idx] = FromDataFileMLR.getTwoDecPoint(q2_loo)
-        trackR2PredValidation[idx] = FromDataFileMLR.getTwoDecPoint(r2pred_validation)
+        trackR2PredValidation[idx] = \
+            FromDataFileMLR.getTwoDecPoint(r2pred_validation)
         trackR2PredTest[idx] = FromDataFileMLR.getTwoDecPoint(r2pred_test)
 
         yTrain[idx] = TrainY.tolist()
 
         yHatTrain[idx] = Yhat_train.tolist()
         for i in range(len(yHatTrain[idx])):
-            yHatTrain[idx][i] = FromDataFileMLR.getTwoDecPoint(yHatTrain[idx][i])
+            yHatTrain[idx][i] = \
+                FromDataFileMLR.getTwoDecPoint(yHatTrain[idx][i])
 
         yHatCV[idx] = Yhat_cv.tolist()
         for i in range(len(yHatCV[idx])):
@@ -184,7 +190,8 @@ def validate_model(model, fileW, population, TrainX, TrainY, ValidateX, Validate
 
         yHatValidation[idx] = Yhat_validation.tolist()
         for i in range(len(yHatValidation[idx])):
-            yHatValidation[idx][i] = FromDataFileMLR.getTwoDecPoint(yHatValidation[idx][i])
+            yHatValidation[idx][i] = \
+                FromDataFileMLR.getTwoDecPoint(yHatValidation[idx][i])
 
         yTest[idx] = TestY.tolist()
 
@@ -192,18 +199,19 @@ def validate_model(model, fileW, population, TrainX, TrainY, ValidateX, Validate
         for i in range(len(yHatTest[idx])):
             yHatTest[idx][i] = FromDataFileMLR.getTwoDecPoint(yHatTest[idx][i])
 
-    write(model,fileW, trackDesc, trackFitness, trackModel, trackR2,\
+    write(model,fileW, trackDesc, trackFitness, trackModel, trackR2,
                 trackQ2,trackR2PredValidation, trackR2PredTest)
 
     return itFits, fitness
 #------------------------------------------------------------------------------  
 
-def write(model,fileW, trackDesc, trackFitness, trackModel, trackR2,\
+def write(model,fileW, trackDesc, trackFitness, trackModel, trackR2,
                 trackQ2,trackR2PredValidation, trackR2PredTest):
     
     for key in trackFitness.keys():
-        fileW.writerow([trackDesc[key], trackFitness[key], trackModel[key], \
-            trackR2[key], trackQ2[key], trackR2PredValidation[key], trackR2PredTest[key]])
+        fileW.writerow([trackDesc[key], trackFitness[key], trackModel[key],
+            trackR2[key], trackQ2[key], trackR2PredValidation[key],
+                        trackR2PredTest[key]])
 
 
     #fileOut.close()
