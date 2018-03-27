@@ -14,7 +14,7 @@ import FromFinessFileMLR
 
 class GeneticAlgorithm:
     #------------------------------------------------------------------------------
-    def getAValidrow(numOfFea, eps=0.015):
+    def getAValidrow(self, numOfFea, eps=0.015):
         sum = 0
         while (sum < 3):
             V = zeros(numOfFea)
@@ -29,7 +29,7 @@ class GeneticAlgorithm:
 
     #------------------------------------------------------------------------------
 
-    def Create_A_Population(numOfPop, numOfFea, self):
+    def Create_A_Population(self, numOfPop, numOfFea):
         population = random.random((numOfPop,numOfFea))
         for i in range(numOfPop):
             V = self.getAValidrow(numOfFea)
@@ -43,7 +43,7 @@ class GeneticAlgorithm:
     # linear regression of "SVM" support vector machine) the R^2 of training, Q^2
     # of training,R^2 of validation, and R^2 of test is placed in the output file
 
-    def createAnOutputFile(alg=None):
+    def createAnOutputFile(self, alg=None):
 
         file_name = None
         algorithm = None
@@ -65,7 +65,7 @@ class GeneticAlgorithm:
 
 
     #------------------------------------------------------------------
-    def createANewPopulation(numOfPop, numOfFea, OldPopulation, fitness, self):
+    def createANewPopulation(self, numOfPop, numOfFea, OldPopulation, fitness):
 
     #   NewPopulation = create a 2D array of (numOfPop by num of features)
     #   sort the OldPopulation and their fitness value based on the asending
@@ -120,12 +120,12 @@ class GeneticAlgorithm:
         return NewPopulation
 
     #---------------------------------------------------------------------------
-    def PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model,
+    def PerformOneMillionIteration(self, numOfPop, numOfFea, population, fitness, model,
                                    fileW, TrainX, TrainY, ValidateX, ValidateY,
-                                   TestX, TestY, self):
+                                   TestX, TestY):
        NumOfGenerations = 1
        OldPopulation = population
-       while (NumOfGenerations < 1000):
+       while (NumOfGenerations < 10):
             print NumOfGenerations
             population = self.createANewPopulation(numOfPop, numOfFea, OldPopulation,
                                               fitness)
