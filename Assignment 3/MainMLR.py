@@ -13,7 +13,11 @@ import FromDataFileMLR
 import FromFinessFileMLR
 
 class GeneticAlgorithm:
-    #------------------------------------------------------------------------------
+    def __init__(self):
+        self.DF = FromDataFileMLR.DataFile()
+        self.FF = FromFinessFileMLR.FitnessFile()
+
+    #--------------------------------------------------------------------
     def getAValidrow(self, numOfFea, eps=0.015):
         sum = 0
         while (sum < 3):
@@ -27,7 +31,7 @@ class GeneticAlgorithm:
             sum = V.sum()
         return V
 
-    #------------------------------------------------------------------------------
+    #-----------------------------------------------------------------------
 
     def Create_A_Population(self, numOfPop, numOfFea):
         population = random.random((numOfPop,numOfFea))
@@ -102,6 +106,7 @@ class GeneticAlgorithm:
 
 
             #mutate each child
+            random.seed()
             for x in range(child.shape[0]):
                 num = random.randint(0, 10000)
                 if num < 5:     #.05% chance
@@ -120,22 +125,24 @@ class GeneticAlgorithm:
         return NewPopulation
 
     #---------------------------------------------------------------------------
-    def PerformOneMillionIteration(self, numOfPop, numOfFea, population, fitness, model,
-                                   fileW, TrainX, TrainY, ValidateX, ValidateY,
-                                   TestX, TestY):
+    def PerformOneMillionIteration(self, numOfPop, numOfFea, population,
+                                   fitness, model, fileW, TrainX, TrainY,
+                                   ValidateX, ValidateY, TestX, TestY):
        NumOfGenerations = 1
        OldPopulation = population
        while (NumOfGenerations < 10):
             print NumOfGenerations
-            population = self.createANewPopulation(numOfPop, numOfFea, OldPopulation,
-                                              fitness)
-            fittingStatus, fitness = FromFinessFileMLR.validate_model(model, fileW,
-                                                                      population,
+            population = self.createANewPopulation(numOfPop, numOfFea,
+                                                   OldPopulation, fitness)
+            fittingStatus, fitness = self.FF.validate_model(model,
+                                                                      fileW,
+                                                                    population,
                                                                       TrainX,
                                                                       TrainY,
                                                                       ValidateX,
                                                                       ValidateY,
-                                                                      TestX, TestY)
+                                                                      TestX,
+                                                                      TestY)
             NumOfGenerations = NumOfGenerations + 1
 
 
@@ -143,6 +150,7 @@ class GeneticAlgorithm:
 def main():
 
     GA = GeneticAlgorithm()
+
     # create an output file. Name the object to be FileW 
     fileW = GA.createAnOutputFile()
 
@@ -170,20 +178,20 @@ def main():
     # getAllOfTheData is in FromDataFileMLR file. The following places the data
     # (training data, validation data, and test data) into associated matrices
     TrainX, TrainY, ValidateX, ValidateY, TestX, TestY = \
-        FromDataFileMLR.getAllOfTheData()
+        GA.DF.getAllOfTheData()
     TrainX, ValidateX, TestX = \
-        FromDataFileMLR.rescaleTheData(TrainX, ValidateX, TestX)
+        GA.DF.rescaleTheData(TrainX, ValidateX, TestX)
 
     fittingStatus = unfit
     population = GA.Create_A_Population(numOfPop,numOfFea)
     fittingStatus, fitness = \
-        FromFinessFileMLR.validate_model(model,fileW, population, TrainX,
+        GA.FF.validate_model(model,fileW, population, TrainX,
                                          TrainY, ValidateX, ValidateY, TestX,
                                          TestY)
 
-    GA.PerformOneMillionIteration(numOfPop, numOfFea, population, fitness, model,
-                               fileW, TrainX, TrainY, ValidateX, ValidateY,
-                               TestX, TestY)
+    GA.PerformOneMillionIteration(numOfPop, numOfFea, population, fitness,
+                                  model, fileW, TrainX, TrainY, ValidateX,
+                                  ValidateY, TestX, TestY)
 
 
 #main routine ends in here
