@@ -106,7 +106,6 @@ class GeneticAlgorithm:
 
 
             #mutate each child
-            random.seed()
             for x in range(child.shape[0]):
                 num = random.randint(0, 10000)
                 if num < 5:     #.05% chance
@@ -130,8 +129,8 @@ class GeneticAlgorithm:
                                    ValidateX, ValidateY, TestX, TestY):
        NumOfGenerations = 1
        OldPopulation = population
-       while (NumOfGenerations < 10):
-            print NumOfGenerations
+       while (NumOfGenerations < 2000):
+            print "A4- " + str(NumOfGenerations)
             population = self.createANewPopulation(numOfPop, numOfFea,
                                                    OldPopulation, fitness)
             fittingStatus, fitness = self.FF.validate_model(model,
