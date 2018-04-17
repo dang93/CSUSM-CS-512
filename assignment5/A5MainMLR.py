@@ -73,7 +73,7 @@ class GeneticAlgorithm:
 
 
     #------------------------------------------------------------------------
-    def createANewPopulation(self, numOfPop, numOfFea, OldPopulation, fitness):
+    def createANewPopulation(self, numOfPop, numOfFea, OldPopulation, fitness, velocity, localBest, globalBest, alpha):
 
     #   NewPopulation = create a 2D array of (numOfPop by num of features)
     #   sort the OldPopulation and their fitness value based on the asending
@@ -81,76 +81,93 @@ class GeneticAlgorithm:
     #   So, Move two rows with of the OldPopulation with the lowest fitness
     #   to row 1 and row 2 of the new population.
 
-        #NewPopulation = OldPopulation
         NewPopulation = ndarray(shape=(numOfPop, numOfFea))
-
-        for i in range(numOfPop):
-            for j in range(numOfFea):
-                NewPopulation[i][j] = 0
+        p = (0.5)*(1+alpha)
 
         inds = fitness.argsort()
         sortedFitness = fitness.sort()
         sortedOldPopu = OldPopulation[inds]
-        NewPopulation[0] = sortedOldPopu[0]
-        VRow = ndarray(shape=(1, numOfFea))
-        F = 0.5
-        counter = 1
-        CV = 0.7
 
-        #make a list of 50 unique sets of 3 numbers within range 0,50
-        master_set = set()
-        set_len = 0
-
-        while(len(master_set) < 50):
-            numbers = r.sample(xrange(1,50), 3)
-            numbers_str = str(numbers[0]) + "," + str(numbers[1]) + ',' \
-                          + str(numbers[2])
-            master_set.add(numbers_str)
-            set_len += 1
-
-        #set m is a set of 3 comma separated integers represented as a string.
-        #turn them into list of 50 lists of 3 integers
-        temp_list = list(master_set)
-        master_list = []
-
-        for j in range(len(temp_list)):
-            num = []
-            for i in temp_list[j].split(','):
-                num.append(int(i))
-            master_list.append(num)
-
-        while(counter < numOfPop):
-            randomNum1 = master_list[counter][0]
-            randomNum2 = master_list[counter][1]
-            randomNum3 = master_list[counter][2]
-
-            #if negative number, make it zero
+        for i in range(numOfPop):
             for j in range(numOfFea):
-                newBit = math.floor(sortedOldPopu[randomNum3][j]+
-                                    (F*(sortedOldPopu[randomNum1][j] -
-                                        sortedOldPopu[randomNum2][j])))
-                if(newBit < 0):
-                    newBit = 0
-                VRow[0][j] = newBit
-
-            for i in range(numOfFea):
-                if(r.uniform(0, 1) > CV):
-                    VRow[0][i] = sortedOldPopu[counter][i]
-
-            NewPopulation[counter] = VRow
-            counter += 1
+                if velocity[i][j] <= alpha:
+                    NewPopulation[i][j] = sortedOldPopu[i][j]
+                elif velocity[i][j] > alpha and velocity[i][j] <= p:
+                    NewPopulation[i][j] = localBest[i][j]
+                elif velocity[i][j] > p and velocity[i][j] <=1:
+                    NewPopulation[i][j] = globalBest[j]
+                else:
+                    NewPopulation[i][j] = sortedOldPopu[i][j]
 
         return NewPopulation
 
+    def createInitialVelocity(self, numOfPop, numOfFea):
+
+        velocity = ndarray(shape=(numOfPop, numOfFea))
+
+        for i in range(numOfPop):
+            for j in range(numOfFea):
+                velocity[i,j] = random.uniform(0,1)
+
+        return velocity
+
+    def createInitialLocalBestMatrix(self, numOfPop, numOfFea, population, fitness):
+
+        localBest = ndarray(shape=(numOfPop, numOfFea))
+        localFitness = ndarray(shape=(numOfPop))
+
+        inds = fitness.argsort()
+        sortedFitness = fitness.sort()
+        sortedPopu = population[inds]
+
+        localBest = sortedPopu
+        localFitness = sortedFitness
+
+        return localBest, localFitness
+
+    def findGlobalBestMatrix(self, globalBest, localBest):
+
+        globalBest = localBest[0]
+
+        return globalBest
+
+    def updateVelocity(self, velocity, localBest, globalBest, currentPopulation, numOfPop, numOfFea):
+        c1 = 2
+        c2 = 2
+        insersiaWeight = 0.9
+
+        for i in range(numOfPop):
+            for j in range(numOfFea):
+                term1 = c1 * random.random() * (localBest[i][j] - currentPopulation[i][j])
+                term2 = c2 * random.random() * (globalBest[j] - currentPopulation[i][j])
+                velocity[i][j] = (insersiaWeight * velocity[i][j]) + term1 + term2
+
+        return velocity
+
+    def updateLocalBest(self, localBest, currentPopulation, localFitness, currentFitness):
+
+        for i in range(50):
+            if currentFitness[i] < localFitness[i]:
+                localBest[i] = currentPopulation[i]
+                localFitness[i] = currentFitness[i]
+
+        return localBest, localFitness
+
+
     def PerformOneMillionIteration(self, numOfPop, numOfFea, population,
                                    fitness, model, fileW, TrainX, TrainY,
-                                   ValidateX, ValidateY, TestX, TestY):
+                                   ValidateX, ValidateY, TestX, TestY, velocity, localBest, localFitness, globalBest):
        NumOfGenerations = 1
+       alpha = 0.5
        OldPopulation = population
-       while (NumOfGenerations < 2000):
+       NumofIteration = 100
+       subtractValue = 0.17 / NumofIteration
+
+
+       while (NumOfGenerations < NumofIteration):
             print(NumOfGenerations)
             population = self.createANewPopulation(numOfPop, numOfFea,
-                                                   OldPopulation, fitness)
+                                                   OldPopulation, fitness, velocity, localBest, globalBest, alpha)
             fittingStatus, fitness = self.FitnessFile.validate_model(model,
                                                                      fileW,
                                                                      population,
@@ -160,6 +177,11 @@ class GeneticAlgorithm:
                                                                      ValidateY,
                                                                      TestX,
                                                                      TestY)
+            localBest, localFitness = self.updateLocalBest(localBest,population, localFitness, fitness)
+            globalBest = self.findGlobalBestMatrix(globalBest, localBest)
+            velocity = self.updateVelocity(velocity, localBest, globalBest, population, numOfPop, numOfFea)
+            alpha -= subtractValue
+
             NumOfGenerations = NumOfGenerations + 1
 
 #----------------------------------------------------------------------------
@@ -197,17 +219,26 @@ def main():
     TrainX, ValidateX, TestX = GA.DataFile.rescaleTheData(TrainX, ValidateX,
                                                           TestX)
 
+
     fittingStatus = unfit
-    population = GA.Create_A_Population(numOfPop,numOfFea)
+
+    population = GA.Create_A_Population(numOfPop, numOfFea)
+
     fittingStatus, fitness = GA.FitnessFile.validate_model(model,fileW,
                                                            population, TrainX,
                                                            TrainY, ValidateX,
                                                            ValidateY, TestX,
-                                                           TestY)
+                                                            TestY)
+
+    globalBest = ndarray(shape=(1, numOfFea))
+
+    velocity = GA.createInitialVelocity(numOfPop, numOfFea)
+    localBest, localFitness = GA.createInitialLocalBestMatrix(numOfPop, numOfFea, population, fitness)
+    globalBest = GA.findGlobalBestMatrix(globalBest, localBest)
 
     GA.PerformOneMillionIteration(numOfPop, numOfFea, population, fitness,
                                   model, fileW, TrainX, TrainY, ValidateX,
-                                  ValidateY, TestX, TestY)
+                                  ValidateY, TestX, TestY, velocity, localBest, localFitness, globalBest)
 
 
 #main routine ends in here
