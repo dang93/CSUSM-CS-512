@@ -151,7 +151,7 @@ class FitnessMLR:
 
             if predictive and ((q2_loo < 0.5) or (r2pred_validation < 0.5) or (r2pred_test < 0.5)):
                 # if it's not worth recording, just return the fitness
-                print ("ending the program because of predictive is: ", predictive)
+                print "ending the program because of predictive is: ", predictive
                 continue
 
             # Compute predicted Y_hat for training set.
